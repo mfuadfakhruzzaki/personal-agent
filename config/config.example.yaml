@@ -1,0 +1,44 @@
+server:
+  port: 8080
+  mode: debug # debug, release
+  api_key: "your-api-key-here"
+  read_timeout: 30
+  write_timeout: 30
+  idle_timeout: 120
+  max_file_size: 5242880 # 5MB in bytes
+
+gemini:
+  api_key: "${GEMINI_API_KEY}"
+  model: "gemini-1.5-flash"
+  timeout: 30
+  max_retries: 3
+
+supabase:
+  url: "${SUPABASE_URL}"
+  key: "${SUPABASE_KEY}"
+  timeout: 30
+  max_retries: 3
+
+logger:
+  level: "info" # debug, info, warn, error
+  format: "json" # json, console
+
+worker:
+  max_workers: 5
+  queue_size: 100
+  job_timeout: 300 # 5 minutes
+
+rate_limit:
+  requests_per_second: 5
+  burst: 10
+  cleanup_interval: 300 # 5 minutes
+
+ocr:
+  enabled: false
+  tesseract_path: "/usr/bin/tesseract"
+  temp_dir: "/tmp/todo-agent"
+
+storage:
+  temp_dir: "/tmp/todo-agent"
+  cleanup_interval: 3600 # 1 hour
+  max_age: 86400 # 24 hours

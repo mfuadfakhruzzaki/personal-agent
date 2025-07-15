@@ -1,0 +1,44 @@
+version: "3.8"
+
+services:
+  todo-agent:
+    build: .
+    ports:
+      - "8080:8080"
+    environment:
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+      - SUPABASE_URL=${SUPABASE_URL}
+      - SUPABASE_KEY=${SUPABASE_KEY}
+      - CONFIG_PATH=/app/config/config.yaml
+    volumes:
+      - ./config/config.yaml:/app/config/config.yaml:ro
+      - ./tmp:/tmp/todo-agent
+    restart: unless-stopped
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "wget",
+          "--no-verbose",
+          "--tries=1",
+          "--spider",
+          "http://localhost:8080/healthz",
+        ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    deploy:
+      resources:
+        limits:
+          memory: 400M
+        reservations:
+          memory: 50M
+
+  # Optional: Redis for job queue (can be enabled if needed)
+  # redis:
+  #   image: redis:7-alpine
+  #   ports:
+  #     - "6379:6379"
+  #   command: redis-server --maxmemory 64mb --maxmemory-policy allkeys-lru
+  #   restart: unless-stopped

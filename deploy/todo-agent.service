@@ -1,0 +1,35 @@
+[Unit]
+Description=Todo Agent Backend Service
+After=network.target
+Wants=network.target
+
+[Service]
+Type=simple
+User=todo-agent
+Group=todo-agent
+WorkingDirectory=/opt/todo-agent
+ExecStart=/opt/todo-agent/bin/todo-agent
+ExecReload=/bin/kill -HUP $MAINPID
+Restart=always
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=todo-agent
+
+# Environment
+Environment=CONFIG_PATH=/opt/todo-agent/config/config.yaml
+EnvironmentFile=-/opt/todo-agent/.env
+
+# Security
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ReadWritePaths=/opt/todo-agent/tmp
+ReadWritePaths=/tmp/todo-agent
+
+# Resource limits
+LimitNOFILE=65536
+MemoryLimit=400M
+
+[Install]
+WantedBy=multi-user.target
